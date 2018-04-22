@@ -35,8 +35,6 @@ public class VrContextActivity extends BaseActivity implements GLSurfaceView.Ren
         super.onCreate(savedInstanceState);
         setContentView(R.layout.glview);
 
-        //mSensorManager=(SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        //List<Sensor> sensors=mSensorManager.getSensorList(Sensor.TYPE_ALL);
         //todo 判断是否存在rotation vector sensor
         //mRotation=mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
@@ -78,9 +76,9 @@ public class VrContextActivity extends BaseActivity implements GLSurfaceView.Ren
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        GLES20.glClearColor(0,0,0,1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
-        GLES20.glClearColor(1,1,1,1);
-
+        /*
         float [] arrSpinMat = new float[16];
         float [] arrTanslateMat = new float[16];
         float [] arrModelMat = new float[16];
@@ -90,9 +88,10 @@ public class VrContextActivity extends BaseActivity implements GLSurfaceView.Ren
             m_iAngle = 0;
         }
         mSkySphere.vGetSpinningMatrix((float)m_iAngle, 0,0,1, arrSpinMat);
-        mSkySphere.vGetTranslationMatrix(0, 3,0,arrTanslateMat);
+        mSkySphere.vGetTranslationMatrix(0, 0,0,arrTanslateMat);
         Matrix.multiplyMM(arrModelMat, 0, arrTanslateMat, 0, arrSpinMat,0);
         mSkySphere.vSetModelMatrix(arrModelMat);
+        */
         mSkySphere.draw();
     }
 

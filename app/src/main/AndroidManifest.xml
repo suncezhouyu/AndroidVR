@@ -24,40 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".render.FGLViewActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity android:name=".ChooseActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".image.SGLViewActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".vary.VaryActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".camera.CameraActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".camera.Camera2Activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".camera.Camera3Activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".etc.ZipActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".fbo.FBOActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".egl.EGLBackEnvActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".obj.ObjLoadActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".obj.ObjLoadActivity2"
-            android:screenOrientation="portrait" />
+
+
         <activity android:name=".vr.VrContextActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".blend.BlendActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".light.LightActivity"
-            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

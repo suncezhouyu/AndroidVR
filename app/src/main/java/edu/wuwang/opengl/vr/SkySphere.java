@@ -25,7 +25,7 @@ public class SkySphere{
     private float r = 2f; // 球的半径
 
     private float radius=2f;
-
+    private int m_iAngle = 0;
     final double angleSpan = Math.PI/90f;// 将球进行单位切分的角度
     int vCount = 0;// 顶点个数，先初始化为0
 
@@ -88,7 +88,7 @@ public class SkySphere{
         Matrix.setLookAtM(mViewMatrix, 0, 15.0f, 0.0f,0.0f, 0.0f, 0.0f,0.0f, 0f,1.0f, 0.0f);
         //模型矩阵
         Matrix.setIdentityM(mModelMatrix,0);
-        //Matrix.scaleM(mModelMatrix,0,2,2,2);
+
     }
 
     public void vGetSpinningMatrix(float fAngle, float x, float y, float z, float[] arrMat)
@@ -106,17 +106,27 @@ public class SkySphere{
     {
         System.arraycopy(arrMat, 0, mModelMatrix, 0, 16);
     }
-    /*public void setMatrix(float[] matrix){
-        System.arraycopy(matrix,0,mRotateMatrix,0,16);
-    }*/
 
-    public void draw(){
+    public void draw()
+    {
+        float [] arrSpinMat1 = new float[16];
+        float [] arrTanslateMat = new float[16];
+        float [] arrModelMat = new float[16];
+        m_iAngle = m_iAngle + 1;
+        if(360 == m_iAngle)
+        {
+            m_iAngle = 0;
+        }
+        vGetSpinningMatrix((float)m_iAngle, 0,0,1, arrSpinMat1);
+        vGetTranslationMatrix(0, -3,0,arrTanslateMat);
+        Matrix.multiplyMM(arrModelMat, 0, arrTanslateMat, 0, arrSpinMat1,0);
+        vSetModelMatrix(arrModelMat);
 
         GLES20.glUseProgram(mHProgram);
         GLES20.glUniformMatrix4fv(mHProjMatrix,1,false,mProjectMatrix,0);
         GLES20.glUniformMatrix4fv(mHViewMatrix,1,false,mViewMatrix,0);
         GLES20.glUniformMatrix4fv(mHModelMatrix,1,false,mModelMatrix,0);
-        //GLES20.glUniformMatrix4fv(mHRotateMatrix,1,false,mRotateMatrix,0);
+
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,textureId);
 
@@ -125,7 +135,20 @@ public class SkySphere{
         GLES20.glEnableVertexAttribArray(mHCoordinate);
         GLES20.glVertexAttribPointer(mHCoordinate,2,GLES20.GL_FLOAT,false,0,cooBuffer);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);
+        GLES20.glDisableVertexAttribArray(mHPosition);
 
+
+        float [] arrSpinMat2 = new float[16];
+        vGetSpinningMatrix((float)m_iAngle, 0,0,1, arrSpinMat2);
+        vGetTranslationMatrix(0, 3,0,arrTanslateMat);
+        Matrix.multiplyMM(arrModelMat, 0, arrTanslateMat, 0, arrSpinMat2,0);
+        vSetModelMatrix(arrModelMat);
+        GLES20.glUniformMatrix4fv(mHModelMatrix,1,false,mModelMatrix,0);
+        GLES20.glEnableVertexAttribArray(mHPosition);
+        GLES20.glVertexAttribPointer(mHPosition,3,GLES20.GL_FLOAT,false,0,posBuffer);
+        GLES20.glEnableVertexAttribArray(mHCoordinate);
+        GLES20.glVertexAttribPointer(mHCoordinate,2,GLES20.GL_FLOAT,false,0,cooBuffer);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);
         GLES20.glDisableVertexAttribArray(mHPosition);
     }
 
