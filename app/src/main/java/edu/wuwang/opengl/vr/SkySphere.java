@@ -36,7 +36,7 @@ public class SkySphere{
     private int mHProjMatrix;
     private int mHViewMatrix;
     private int mHModelMatrix;
-    private int mHRotateMatrix;
+    //private int mHRotateMatrix;
     private int mHPosition;
     private int mHCoordinate;
 
@@ -45,7 +45,7 @@ public class SkySphere{
     private float[] mViewMatrix=new float[16];
     private float[] mProjectMatrix=new float[16];
     private float[] mModelMatrix=new float[16];
-    private float[] mRotateMatrix=new float[16];
+    //private float[] mRotateMatrix=new float[16];
 
     private FloatBuffer posBuffer;
     private FloatBuffer cooBuffer;
@@ -64,11 +64,12 @@ public class SkySphere{
     }
 
     public void create(){
+        GLES20.glClearColor(0,0,0,0);
         mHProgram=Gl2Utils.createGlProgramByRes(res,"vr/skysphere.vert","vr/skysphere.frag");
         mHProjMatrix=GLES20.glGetUniformLocation(mHProgram,"uProjMatrix");
         mHViewMatrix=GLES20.glGetUniformLocation(mHProgram,"uViewMatrix");
         mHModelMatrix=GLES20.glGetUniformLocation(mHProgram,"uModelMatrix");
-        mHRotateMatrix=GLES20.glGetUniformLocation(mHProgram,"uRotateMatrix");
+        //mHRotateMatrix=GLES20.glGetUniformLocation(mHProgram,"uRotateMatrix");
         mHUTexture=GLES20.glGetUniformLocation(mHProgram,"uTexture");
         mHPosition=GLES20.glGetAttribLocation(mHProgram,"aPosition");
         mHCoordinate=GLES20.glGetAttribLocation(mHProgram,"aCoordinate");
@@ -84,15 +85,30 @@ public class SkySphere{
         //透视投影矩阵/视锥
         MatrixHelper.perspectiveM(mProjectMatrix,0,45,ratio,1f,300);
         //设置相机位置
-        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0.0f,0.0f, 0.0f, 0.0f,-1.0f, 0f,1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 15.0f, 0.0f,0.0f, 0.0f, 0.0f,0.0f, 0f,1.0f, 0.0f);
         //模型矩阵
         Matrix.setIdentityM(mModelMatrix,0);
         //Matrix.scaleM(mModelMatrix,0,2,2,2);
     }
 
-    public void setMatrix(float[] matrix){
-        System.arraycopy(matrix,0,mRotateMatrix,0,16);
+    public void vGetSpinningMatrix(float fAngle, float x, float y, float z, float[] arrMat)
+    {
+        Matrix.setRotateM(arrMat, 0, fAngle, x, y, z);
     }
+
+    public void vGetTranslationMatrix(float x, float y, float z, float [] arrMat)
+    {
+        Matrix.setIdentityM(arrMat,0);
+        Matrix.translateM(arrMat, 0, x,y,z);
+    }
+
+    public void vSetModelMatrix(float[] arrMat)
+    {
+        System.arraycopy(arrMat, 0, mModelMatrix, 0, 16);
+    }
+    /*public void setMatrix(float[] matrix){
+        System.arraycopy(matrix,0,mRotateMatrix,0,16);
+    }*/
 
     public void draw(){
 
@@ -100,7 +116,7 @@ public class SkySphere{
         GLES20.glUniformMatrix4fv(mHProjMatrix,1,false,mProjectMatrix,0);
         GLES20.glUniformMatrix4fv(mHViewMatrix,1,false,mViewMatrix,0);
         GLES20.glUniformMatrix4fv(mHModelMatrix,1,false,mModelMatrix,0);
-        GLES20.glUniformMatrix4fv(mHRotateMatrix,1,false,mRotateMatrix,0);
+        //GLES20.glUniformMatrix4fv(mHRotateMatrix,1,false,mRotateMatrix,0);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,textureId);
 
@@ -148,8 +164,8 @@ public class SkySphere{
 
                 float s0 = (float) (hAngle / Math.PI/2);
                 float s1 = (float) ((hAngle + angleSpan)/Math.PI/2);
-                float t0 = (float) (vAngle / Math.PI);
-                float t1 = (float) ((vAngle + angleSpan) / Math.PI);
+                float t0 = (float) (1.0 - vAngle / Math.PI);
+                float t1 = (float) (1.0-(vAngle + angleSpan) / Math.PI);
 
                 textureVertix.add(s1);// x1 y1对应纹理坐标
                 textureVertix.add(t0);
